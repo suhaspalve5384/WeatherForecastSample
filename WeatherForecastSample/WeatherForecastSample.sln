@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherForecastSampleWebApp", "WeatherForecastSampleWebApp\WeatherForecastSampleWebApp.csproj", "{8E392735-7EEB-4BE0-9076-83F951CEA0EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherForecastSample.DAL", "WeatherForecastSample.ClassLibrary\WeatherForecastSample.DAL.csproj", "{29B98FDB-3FC6-480A-93B0-FC56689D5633}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherForecastSample.DAL", "WeatherForecastSample.DAL\WeatherForecastSample.DAL.csproj", "{29B98FDB-3FC6-480A-93B0-FC56689D5633}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherForecastSample.BL", "WeatherForecastSample.BL\WeatherForecastSample.BL.csproj", "{5D964E64-23A1-4815-B641-BEC8B246BD19}"
 EndProject
