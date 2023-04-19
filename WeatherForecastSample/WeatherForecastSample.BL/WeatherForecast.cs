@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Data;
 using Newtonsoft.Json;
 using WeatherForecastSample.RepositoryContract;
+using System.Configuration;
 
 namespace WeatherForecastSample.BL
 {
@@ -19,6 +20,11 @@ namespace WeatherForecastSample.BL
         public WeatherForecast(IWeatherForecastRepository p_weatherForecastRepository)
         {
             this.weatherForecastRepository = p_weatherForecastRepository;
+        }
+
+        public IEnumerable<Location> GetAllLocationWheatherForecast()
+        {
+            return weatherForecastRepository.GetAll();
         }
 
         public Location GetWheatherForecast(decimal latitude, decimal longitude)
@@ -44,7 +50,7 @@ namespace WeatherForecastSample.BL
 
             using (HttpClient httpClient = new HttpClient())
             {
-                HttpResponseMessage responceMessge = httpClient.GetAsync($"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=temperature_2m").Result;
+                HttpResponseMessage responceMessge = httpClient.GetAsync($"{ConfigurationManager.AppSettings["WheatherForecastWebAPIUrl"]}latitude={latitude}&longitude={longitude}&hourly={ConfigurationManager.AppSettings["HourlyWheatherVariables"]}&daily={ConfigurationManager.AppSettings["DailyWheatherVariables"]}&current_weather={ConfigurationManager.AppSettings["CurrentWeather"]}&timezone={ConfigurationManager.AppSettings["Timezone"]}").Result;
 
                 if (responceMessge.IsSuccessStatusCode)
                 {
@@ -67,10 +73,33 @@ namespace WeatherForecastSample.BL
             {
                 locationWheatherForecast.HourlyWeathers = new List<HourlyWeather>();
 
-                for (int i = 0; i < data.hourly.time.Count; i++)
+                foreach (string v in ConfigurationManager.AppSettings["HourlyWheatherVariables"].Split(','))
                 {
-                    locationWheatherForecast.HourlyWeathers.Add(new HourlyWeather() { time = data.hourly.time[i], wheathertype = "temperature_2m", wheatherTypeValue = data.hourly.temperature_2m[i] });
+                    for (int i = 0; i < data.hourly.time.Count; i++)
+                    {
+                        locationWheatherForecast.HourlyWeathers.Add(new HourlyWeather() { time = data.hourly.time[i], wheathertype = v, wheatherTypeValue = data.hourly.v[i] });
+                    }
                 }
+            }
+
+            if (data.daily != null && data.daily.time != null && data.daily.time.Count > 0)
+            {
+                locationWheatherForecast.DailyWeathers = new List<DailyWeather>();
+
+                foreach (string v in ConfigurationManager.AppSettings["DailyWheatherVariables"].Split(','))
+                {
+                    for (int i = 0; i < data.daily.time.Count; i++)
+                    {
+                        locationWheatherForecast.DailyWeathers.Add(new DailyWeather() { time = data.daily.time[i], wheathertype = v, wheatherTypeValue = data.daily.v[i] });
+                    }
+                }
+            }
+
+            if (data.current_weather != null)
+            {
+                locationWheatherForecast.CurrentWeathers = new List<CurrentWeather>();
+
+                locationWheatherForecast.CurrentWeathers.Add(new CurrentWeather() { temperature = data.current_weather.temperature, windspeed = data.current_weather.windspeed, winddirection = data.current_weather.winddirection, weathercode = data.current_weather.weathercode, is_day = data.current_weather.is_day, time = data.current_weather.time });
             }
         }
     }

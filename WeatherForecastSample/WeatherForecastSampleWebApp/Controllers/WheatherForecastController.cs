@@ -16,9 +16,9 @@ namespace WeatherForecastSampleWebApp.Controllers
         }
 
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public IEnumerable<Location> GetAllLocationsWheatherForecast()
         {
-            return new string[] { "value1", "value2" };
+            return weatherForecast.GetAllLocationWheatherForecast();
         }
 
         // GET api/<controller>/5

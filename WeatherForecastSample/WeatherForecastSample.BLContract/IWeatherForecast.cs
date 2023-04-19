@@ -9,6 +9,8 @@ namespace WeatherForecastSample.BLContract
 {
     public interface IWeatherForecast
     {
+        IEnumerable<Location> GetAllLocationWheatherForecast();
+
         Location GetWheatherForecast(decimal latitude, decimal longitude);
     }
 }
